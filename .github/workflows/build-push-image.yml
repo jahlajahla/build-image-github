@@ -21,8 +21,12 @@ jobs:
       - name: Build Image
         run: docker build -t $IMAGE_NAME .
 
-      - name: Login to GitHub Registry
-        run: echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Push Image
         run: docker push $IMAGE_NAME
@@ -34,8 +38,12 @@ jobs:
       - name: Check out repository code
         uses: actions/checkout@v4
 
-      - name: Login to GitHub Registry
-        run: echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: stop and remove existing container
         run: docker compose down --rmi all
